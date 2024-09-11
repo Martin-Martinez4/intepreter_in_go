@@ -136,6 +136,11 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 	stmt := &ast.ReturnStatement{Token: p.curToken}
 
 	p.nextToken()
+
+	if !p.curTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
+
 	return stmt
 }
 
