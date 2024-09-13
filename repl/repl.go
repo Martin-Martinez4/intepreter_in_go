@@ -6,11 +6,18 @@ import (
 	"io"
 
 	"github.com/Martin-Martinez4/intepreter_in_go/lexer"
-	"github.com/Martin-Martinez4/intepreter_in_go/token"
+	"github.com/Martin-Martinez4/intepreter_in_go/parser"
 )
 
 const PROMPT = "-> "
 
+func printParseErrors(out io.Writer, errors []string) {
+	io.WriteString(out, "Woops! we ran into some monkey business here!")
+	io.WriteString(out, " parser errors: \n")
+	for _, msg := range errors {
+		io.WriteString(out, "\t"+msg+"\n")
+	}
+}
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 
@@ -23,9 +30,15 @@ func Start(in io.Reader, out io.Writer) {
 
 		line := scanner.Text()
 		l := lexer.New(line)
+		p := parser.New(l)
 
-		for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
-			fmt.Fprintf(out, "%v\n", tok)
+		program := p.ParseProgram()
+		if len(p.Errors()) != 0 {
+			printParseErrors(out, p.Errors())
+			continue
 		}
+
+		io.WriteString(out, program.String())
+		io.WriteString(out, "\n")
 	}
 }
