@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/Martin-Martinez4/intepreter_in_go/evaluator"
 	"github.com/Martin-Martinez4/intepreter_in_go/lexer"
 	"github.com/Martin-Martinez4/intepreter_in_go/parser"
 )
@@ -38,7 +39,12 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		io.WriteString(out, program.String())
-		io.WriteString(out, "\n")
+		evaluated := evaluator.Eval(program)
+		if evaluated != nil {
+
+			io.WriteString(out, program.String())
+			io.WriteString(out, "\n")
+		}
+
 	}
 }
