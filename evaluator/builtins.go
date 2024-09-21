@@ -109,5 +109,5 @@ var builtins = map[string]*object.Builtin{
 
 			return NULL
 		},
-	}
+	},
 }
